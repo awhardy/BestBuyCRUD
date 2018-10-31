@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql.Data.MySqlClient;
-using System.IO;
-using Newtonsoft.Json.Linq;
+﻿using MySql.Data.MySqlClient;
 
 namespace CrudOperations
 {
@@ -13,8 +8,8 @@ namespace CrudOperations
         {
             connStr = connectionString;
         }
-        private string connStr;
 
+        private string connStr;
 
         public void CreateProduct(string Name, decimal Price, int catID)
         {
@@ -32,10 +27,8 @@ namespace CrudOperations
                 cmd.Parameters.AddWithValue("cID", catID);
 
                 cmd.ExecuteNonQuery();
-
             }
         }
-
 
         public Product ReadProduct(int id)
         {
@@ -44,7 +37,7 @@ namespace CrudOperations
             using (conn)
             {
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ProductID, Name, Price " +
+                cmd.CommandText = "SELECT ProductID, Name, Price, CategoryID " +
                                     "FROM products " +
                                     "WHERE ProductID=" + id;
 
@@ -56,7 +49,8 @@ namespace CrudOperations
                     {
                         Name = dataReader["Name"].ToString(),
                         ProductId = (int)dataReader["ProductID"],
-                        Price = (decimal)dataReader["Price"]
+                        Price = (decimal)dataReader["Price"],
+                        CategoryId = (int)dataReader["CategoryID"]
                     };
 
                     return product;
@@ -68,7 +62,6 @@ namespace CrudOperations
                 }
             }
         }
-
 
         public void UpdateProduct(Product prod)
         {
@@ -88,7 +81,6 @@ namespace CrudOperations
                 cmd.ExecuteNonQuery();
             }
         }
-
 
         public void DeleteProduct(int id)
         {
